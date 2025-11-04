@@ -19,7 +19,13 @@ public:
         delete i;
     }
     
-  
+  Complex& operator=(const Complex& other) {
+    if (this != &other) {
+        *r = *other.r;
+        *i = *other.i;
+    }
+    return *this;
+}
     
     void getdata() {
         int real, imag;
@@ -44,17 +50,28 @@ public:
     Complex operator - (Complex c){
         return Complex(*r - *c.r, *i - *c.i);
     }
+   
+    Complex operator * (Complex c) {
+	int real = (*r) * (*c.r) - (*i) * (*c.i);
+	int imag = (*r) * (*c.i) + (*i) * (*c.r);
+	return Complex(real, imag);
+    }
+    
+    
+    
 };
 
 int main() {
-    Complex a, b, sum, subs;
+    Complex a, b, sum, subs, multi, div;
 
     a.getdata();
     b.getdata();
 
     sum = a + b;
     subs = a - b;
-
+    multi = a * b;
+    
+	
     cout << "First Complex Number: ";
     a.display();
 
@@ -67,6 +84,9 @@ int main() {
     cout << "Subtraction of Complex Numbers: ";
     subs.display();
     
+     cout << "Multiplication of Complex Numbers: ";
+     multi.display();
+     
+    
     return 0;
 }
-
