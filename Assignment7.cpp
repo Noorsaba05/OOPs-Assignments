@@ -1,59 +1,72 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <stdexcept>
 using namespace std;
 
 template <typename T>
-class sorter{
+class SimpleSorter {
 private:
-	vector<T> data;
-
-	void bubbleSort(bool ascending);
-	void quickSort(int low, int high, bool ascending);
+    T arr[20];
+    int size;
 
 public:
-	void addElement(const T& value){
-		data.push_back(value);
-	}
+    SimpleSorter() {
+        size = 0;
+    }
 
-	void display() const {
-		if(data.empty()){
-			cout<<"No element to display";
-			return;
-		}
-		for (const T& x : data) {
-			cout << x << " ";
-		}
-		cout << endl;
-	}
+    void addElement(T value) {
+        if (size >= 20) {
+            throw runtime_error("Array is full");
+        }
+        arr[size] = value;
+        size++;
+    }
 
-	void sort(bool ascending, int method){
-		if(data.empty()){
-			throw runtime_error("Cannot sort Empty List!");
-		}
-		if (method == 1) {
-			bubbleSort(ascending);
-		} 
-		else if (method == 2) {
-			quickSort(0, data.size() - 1, ascending);
-		}
-		else {
-			throw invalid_argument("Invalid sorting method.");
-		}
-	}
+    void bubbleSort(bool ascending = true) {
+        if (size == 0) {
+            throw runtime_error("No elements to sort");
+        }
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                bool condition = ascending ?
+                                 (arr[j] > arr[j + 1]) :
+                                 (arr[j] < arr[j + 1]);
+
+                if (condition) {
+                    T temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    void display() {
+        if (size == 0) {
+            throw runtime_error("No elements to display");
+        }
+
+        for (int i = 0; i < size; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
 };
 
+int main() {
+    try {
+        SimpleSorter<string> s;
 
-template <typename T>
-void sorter<T>::bubbleSort(bool ascending) {
-	int n = data.size();
-	for (int i = 0; i < n - 1; i++) {
-		for (int j = 0; j < n - i - 1; j++) {
-			if (ascending ? (data[j] > data[j + 1]) : (data[j] < data[j + 1])) {
-				T temp = data[j];
-				data[j] = data[j + 1];
-				data[j + 1] = temp;
-			}
-		}
-	}
+        s.addElement("a");
+        s.addElement("bt");
+        s.addElement("c");
+
+        s.bubbleSort(false);  
+        s.display();
+    }
+    catch (exception& e) {
+        cout << "Error: " << e.what() << endl;
+    }
+
+    return 0;
 }
-
