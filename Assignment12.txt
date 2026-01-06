@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Contact {
+    string name;
+    string phone;
+
+public:
+    // 1. Default Constructor (Needed for array)
+    Contact() {}
+
+    // 2. Parameterized Constructor (Uses 'this')
+    Contact(string name, string phone) {
+        this->name = name;   // 'this->name' is the class variable
+        this->phone = phone; // 'phone' is the parameter
+    }
+
+    // 3. Destructor (Optional for this specific code, but good for viva)
+    ~Contact() {
+        // Runs when delete[] is called
+    }
+
+    void display() {
+        cout << "Name: " << name << "\tPhone: " << phone << endl;
+    }
+
+    string getName() { return name; }
+};
+
+int main() {
+    int size, count = 0, choice;
+    string n, p, search;
+
+    cout << "Enter total contacts size: ";
+    cin >> size;
+
+    // 4. Dynamic Allocation (Create array on Heap)
+    Contact* arr = new Contact[size];
+
+    while (true) {
+        cout << "\n1.Add  2.Show  3.Search  4.Exit\nEnter Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: // ADD
+                if (count < size) {
+                    cout << "Enter Name and Phone: ";
+                    cin >> n >> p;
+                    arr[count] = Contact(n, p); // Create and store
+                    count++;
+                } else {
+                    cout << "Memory Full!" << endl;
+                }
+                break;
+
+            case 2: // DISPLAY
+                for (int i = 0; i < count; i++) {
+                    arr[i].display();
+                }
+                break;
+
+            case 3: // SEARCH
+                cout << "Enter name to search: ";
+                cin >> search;
+                for (int i = 0; i < count; i++) {
+                    if (arr[i].getName() == search) {
+                        arr[i].display();
+                    }
+                }
+                break;
+
+            case 4: // EXIT
+                // 5. Cleanup Memory
+                delete[] arr; 
+                cout << "Memory Freed. Bye!" << endl;
+                return 0;
+
+            default:
+                cout << "Invalid Choice" << endl;
+        }
+    }
+}
