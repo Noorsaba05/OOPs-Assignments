@@ -1,0 +1,72 @@
+#include <iostream>
+#include <fstream>  // Required for File I/O
+#include <string>
+using namespace std;
+
+class PasswordManager {
+    string site, user, pass;
+
+public:
+    // 1. ADD PASSWORD (Write to File)
+    void addPassword() {
+        cout << "Enter Website, Username, Password: ";
+        cin >> site >> user >> pass;
+
+        // ios::app -> Append Mode (Don't delete old data)
+        ofstream file("vault.txt", ios::app);
+        file << site << " " << user << " " << pass << endl;
+        file.close();
+        
+        cout << "Saved successfully!" << endl;
+    }
+
+    // 2. VIEW ALL (Read from File)
+    void viewPasswords() {
+        ifstream file("vault.txt");
+        
+        cout << "\n--- Your Vault ---" << endl;
+        // Standard Read Loop: "While there is data to read..."
+        while (file >> site >> user >> pass) {
+            cout << "Site: " << site << "\tUser: " << user << "\tPass: " << pass << endl;
+        }
+        file.close();
+    }
+    
+    // 3. SEARCH (Read & Compare)
+    void searchPassword() {
+        string target;
+        cout << "Enter Website to search: ";
+        cin >> target;
+        
+        ifstream file("vault.txt");
+        bool found = false;
+        
+        while (file >> site >> user >> pass) {
+            if (site == target) {
+                cout << "Found -> User: " << user << " Pass: " << pass << endl;
+                found = true;
+            }
+        }
+        
+        if (!found) cout << "Not found!" << endl;
+        file.close();
+    }
+};
+
+int main() {
+    PasswordManager pm;
+    int choice;
+
+    while (true) {
+        cout << "\n1.Add  2.View  3.Search  4.Exit\nEnter Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: pm.addPassword(); break;
+            case 2: pm.viewPasswords(); break;
+            case 3: pm.searchPassword(); break;
+            case 4: return 0;
+            default: cout << "Invalid!" << endl;
+        }
+    }
+}
